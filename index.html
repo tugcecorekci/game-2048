@@ -7,29 +7,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <title>2048!</title>
 </head>
 
 <body>
-    <header>
-        <h1>2048</h1>
-        <div class="currentScore">
-            <p id="scoreText">score</p>
-            <p id="scoreValue">score</p>
-        </div>
-        <div class="bestScore">
-            <p id="bestScoreText">best</p>
-            <p id="bestScoreValue">best</p>
-        </div>
-    </header>
-    <nav>
-        <button>new game</button>
-    </nav>
-    <main>
-        <div class="gamePanel"></div>
-    </main>
+    <div class="project">
+        <header>
+            <h1>2048</h1>
+            <div class="currentScore">
+                <p id="scoreText">SCORE</p>
+                <p id="scoreValue">000000</p>
+            </div>
+            <div class="bestScore">
+                <p id="bestScoreText">BEST</p>
+                <p id="bestScoreValue">000000</p>
+            </div>
+        </header>
+        <nav>
+            <p class="howto">Join the tiles, get to <span id="howtobold">2048!</span></p>
+            <button class="newGameBtn">NEW GAME</button>
+        </nav>
+        <main>
+            <div class="gamePanel">
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+                <div class="num">1</div>
+            </div>
+        </main>
+    </div>
 
     <script src="app.js"></script>
 </body>

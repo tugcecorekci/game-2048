@@ -49,6 +49,13 @@ table {
 
 /*start*/
 
+:root {
+    --tableColor: #b9ada2;
+    --numberDarkColor: #736d63;
+    --numberLightColor: #f5f5f5;
+    --textFadedColor: #ece2d8;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -59,8 +66,126 @@ html {
     font-weight: 400;
 }
 
+body {
+    background-color: var(--textLightColor);
+	min-height: 100vh;
+	width: 100vw;
+	display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.project {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-rows: 15% 15% 70%;
+    width: 50rem;
+    height: 100vh;
+}
+
+header {
+    width: inherit;
+    padding-top: 2rem;
+    display: grid;
+    grid-template-columns: 6fr 1fr 1fr;
+    column-gap: 1rem;
+    align-items: center;
+}
+
 h1 {
+    color: var(--numberDarkColor);
+    font-size: 8rem;
+    font-weight: 900;
+    letter-spacing: .1rem;
+}
+
+.currentScore, .bestScore {
+    background-color: var(--tableColor);
+    width: 10rem;
+    height: 6rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: .5rem;
+}
+
+#scoreText, #bestScoreText {
+    color: var(--textFadedColor);
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+
+#scoreValue, #bestScoreValue {
+    color: var(--numberLightColor);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: .75rem;
+    text-align: center;
+}
+
+nav {
+    width: inherit;
+    padding-bottom: 1rem;
+    margin-bottom: 2.5rem;
+    display: grid;
+    grid-template-columns: 7fr 1fr;
+    column-gap: 1rem;
+    align-items: center;
+}
+
+.howto {
+    color: var(--numberDarkColor);
+    font-size: 2rem;
+    font-weight: 400;
+}
+
+#howtobold {
+    font-weight: 700;
+}
+
+.newGameBtn {
+    outline: none;
+    border: none;
+    border-radius: .75rem;
+    width: 10rem;
+    height: 4rem;
+    background-color: var(--numberDarkColor);
+    color: var(--numberLightColor);
+    font-weight: 700;
+    text-align: center;
+}
+
+main {
+    background-color: var(--numberDarkColor);
+    width: 50rem;
+    height: 50rem;
+    border-radius: .75rem;
+}
+
+.gamePanel {
+    width: inherit;
+    height: inherit;
+    padding: 1rem;
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+    justify-content: stretch;
+    justify-content: stretch;
+}
+
+.num {
+    background-color: var(--tableColor);
+    color: var(--numberDarkColor);
     font-size: 5rem;
     font-weight: 700;
-    letter-spacing: .2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
