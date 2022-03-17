@@ -54,6 +54,7 @@ table {
     --numberDarkColor: #736d63;
     --numberLightColor: #f5f5f5;
     --textFadedColor: #ece2d8;
+    --textLightColor: #faf8f0;
 }
 
 * {
@@ -76,12 +77,12 @@ body {
 }
 
 .project {
-    padding-top: 3rem;
+    padding-top: 1rem;
     padding-bottom: 3rem;
     display: grid;
     justify-content: center;
     align-items: center;
-    grid-template-rows: 15% 15% 70%;
+    grid-template-rows: 15% 12% 70%;
     width: 50rem;
     height: 100vh;
 }
@@ -154,14 +155,15 @@ nav {
     border-radius: .75rem;
     width: 10rem;
     height: 4rem;
-    background-color: var(--numberDarkColor);
+    background-color: #8c7b68;
     color: var(--numberLightColor);
     font-weight: 700;
     text-align: center;
 }
 
 main {
-    background-color: var(--numberDarkColor);
+    margin-top: 1rem;
+    background-color: #b9ada1;
     width: 50rem;
     height: 50rem;
     border-radius: .75rem;
@@ -170,22 +172,74 @@ main {
 .gamePanel {
     width: inherit;
     height: inherit;
-    padding: 1rem;
+    padding: 1.5rem;
     display: grid;
     grid-template-rows: repeat(4, 1fr);
     grid-template-columns: repeat(4, 1fr);
-    grid-column-gap: 1rem;
-    grid-row-gap: 1rem;
+    grid-column-gap: 1.5rem;
+    grid-row-gap: 1.5rem;
     justify-content: stretch;
     justify-content: stretch;
 }
 
-.num {
-    background-color: var(--tableColor);
-    color: var(--numberDarkColor);
+.gamePanel > div {
+    background-color: #cac1b5;
     font-size: 5rem;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#num2 {
+    background-color: #ece4da;
+    color: var(--numberDarkColor);
+}
+#num4 {
+    background-color: #eae0c9;
+    color: var(--numberDarkColor);
+}
+#num8 {
+    background-color: #eab281;
+    color: var(--textLightColor)
+}
+#num16 {
+    background-color: #e8996c;
+    font-size: 4.8rem;
+    color: var(--textLightColor)
+}
+#num32 {
+    background-color: #e68367;
+    font-size: 4.8rem;
+    color: var(--textLightColor)
+}
+#num64 {
+    background-color: #e36748;
+    font-size: 4.8rem;
+    color: var(--textLightColor)
+}
+#num128 {
+    background-color: #e8d080;
+    font-size: 4.7rem;
+    color: var(--textLightColor)
+}
+#num256 {
+    background-color: #e8cc72;
+    font-size: 4.7rem;
+    color: var(--textLightColor)
+}
+#num512 {
+    background-color: #e7c965;
+    font-size: 4.5rem;
+    color: var(--textLightColor)
+}
+#num1024 {
+    background-color: #e7c659;
+    font-size: 4rem;
+    color: var(--textLightColor)
+}
+#num2048 {
+    background-color: #e6c34f;
+    font-size: 4rem;
+    color: var(--textLightColor)
 }
