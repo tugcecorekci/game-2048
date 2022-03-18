@@ -25,6 +25,9 @@ let numbers = {
 //set first numbers at two random places at beginning
 randomAdd()
 randomAdd()
+setBoard()
+console.log("hello")
+console.log(gameboard)
 
 //set numbers from gameboard array to board
 function setBoard() {
@@ -61,6 +64,49 @@ function randomAdd() {
     setBoard()
 }
 
+function checkRandomAdd(e) {
+    if (e.key == "ArrowUp") {
+        let numbersOfBoardDown = []
+        let up = 0
+        for (let c = 0; c < gameboard.length; c++) {
+            numbersOfBoardDown.push(gameboard[up][c].toString())
+        }
+        if (numbersOfBoardDown.includes("0") == true) {
+            randomAdd()
+        }
+    }
+    if (e.key == "ArrowDown") {
+        let numbersOfBoardDown = []
+        let down = gameboard.length - 1
+        for (let c = 0; c < gameboard.length; c++) {
+            numbersOfBoardDown.push(gameboard[down][c].toString())
+        }
+        if (numbersOfBoardDown.includes("0") == true) {
+            randomAdd()
+        }
+    }
+    if (e.key == "ArrowLeft") {
+        let numbersOfBoardDown = []
+        let left = 0
+        for (let r = 0; r < gameboard.length; r++) {
+            numbersOfBoardDown.push(gameboard[r][left].toString())
+        }
+        if (numbersOfBoardDown.includes("0") == true) {
+            randomAdd()
+        }
+    }
+    if (e.key == "ArrowRight") {
+        let numbersOfBoardDown = []
+        let right = gameboard.length - 1
+        for (let r = 0; r < gameboard.length; r++) {
+            numbersOfBoardDown.push(gameboard[r][right].toString())
+        }
+        if (numbersOfBoardDown.includes("0") == true) {
+            randomAdd()
+        }
+    }
+}
+
 //game over function - note: update - if operation still possible, not game over.
 let isGameOver = false
 
@@ -81,68 +127,63 @@ function checkGameOver() {
 document.addEventListener('keydown', keyFunction)
 
 function keyFunction(e) {
-    console.log(e.key)
     if (e.key == "ArrowUp" || e.key == "w") {
-        checkGameOver()
-        moveUp()
-        randomAdd()
+
     }
     else if (e.key == "ArrowDown" || e.key == "s") {
         checkGameOver()
+        setBoard()
         moveDown()
-        randomAdd()
+        checkRandomAdd(e)
     }
     else if (e.key == "ArrowLeft" || e.key == "s") {
-        checkGameOver()
-        moveLeft()
-        randomAdd()
+
     }
     else if (e.key == "ArrowRight" || e.key == "s") {
-        checkGameOver()
-        moveRight()
-        randomAdd()
+
     }
 }
 
 //move numbers
 
-let flag = false
-
 function moveUp() {
-    setBoard()
-    for (let i = 0; i < gameboard.length; i++) {
-        for (let j = 1; j < 4; j++) {
-            flag = false
-            if (gameboard[j][i] == gameboard[j - 1][i] && flag == false) {
-                gameboard[j - 1][i] = parseInt(gameboard[j][i]) + parseInt(gameboard[j - 1][i])
-                gameboard[j][i] = "0"
-            }
-            else if (gameboard[j - 1][i] == "0" && flag == false) {
-                gameboard[j - 1][i] = gameboard[j][i]
-                gameboard[j][i] = "0"
-                setTimeout(moveUp)
-            }
-        }
-        flag = true
-    }
 }
 
 function moveDown() {
-    setBoard()
-    for (let i = 0; i < gameboard.length; i++) {
-        for (let j = 1; j < 4; j++) {
-            flag = false
-            if (gameboard[j][i] == gameboard[j - 1][i] && flag == false) {
-                gameboard[j - 1][i] = parseInt(gameboard[j][i]) + parseInt(gameboard[j - 1][i])
-                gameboard[j][i] = "0"
-            }
-            else if (gameboard[j - 1][i] == "0" && flag == false) {
-                gameboard[j - 1][i] = gameboard[j][i]
-                gameboard[j][i] = "0"
-                setTimeout(moveUp)
+    for (let c = 0; c < gameboard.length; c++) {
+        let array = []
+        for (let r = 3; 0 <= r; r--) {
+            array.push(gameboard[r][c])
+        }
+        //sıfırları atma
+        while (array.includes("0")) {
+            let index = array.indexOf("0")
+            array.splice(index, 1)
+        }
+        //toplama
+        for (let i = 0; i < array.length - 1; i++) {
+            if (array[i] == array[i + 1]) {
+                array[i] = (parseInt(array[i]) + parseInt(array[i + 1])).toString()
+                array[i + 1] = "0"
             }
         }
-        flag = true
+        console.log("toplama")
+        console.log(array)
+        //gameboard yerleştirme
+        let countRow = 3
+        for (let i = 0; i < gameboard.length; i++) {
+            gameboard[countRow][c] = array[i]
+            countRow -= 1
+        }
+        console.log("toplama")
+        console.log(array)
+        console.log(gameboard)
+        //gameboard sıfır yerleştirme
+        for (let nr = 3; 0 <= nr; nr--) {
+            if (gameboard[nr][c] == undefined) {
+                gameboard[nr][c] = "0"
+            }
+        }
     }
 }
 
