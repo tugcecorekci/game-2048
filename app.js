@@ -12,6 +12,13 @@ let gameboard = [
     ["0", "0", "0", "0"]
 ]
 
+let gameboardChanged = [
+    ["0", "0", "0", "0"],
+    ["0", "0", "0", "0"],
+    ["0", "0", "0", "0"],
+    ["0", "0", "0", "0"]
+]
+
 let numbers = {
     0: 'num0',
     2: 'num2',
@@ -37,6 +44,8 @@ function startNewGame() {
     ]
     randomAdd()
     randomAdd()
+    makeEqual(gameboard, gameboardChanged)
+    setBoard()
     scoreValue.textContent = "0"
 }
 
@@ -66,65 +75,40 @@ function resetBoard() {
 
 //add new number to random cell
 function randomAdd() {
-    let row = Math.floor(Math.random() * 4)
-    let col = Math.floor(Math.random() * 4)
-    let possibility = Math.random()
-    if (possibility > 0.2) {
-        if (gameboard[row][col] == "0") {
-            gameboard[row][col] = "2"
-        } else {
-            setTimeout(randomAdd)
+    let zeroElements = []
+    for (let i = 0; i < gameboard.length; i++) {
+        for (let j = 0; j < gameboard.length; j++) {
+            if (gameboardChanged[i][j] == 0) {
+                zeroElements.push({ row: i, column: j })
+            }
         }
+    }
+    let randomIndex = Math.floor(Math.random() * zeroElements.length)
+    let possibility = Math.random()
+    if (possibility < 0.1) {
+        gameboardChanged[zeroElements[randomIndex].row][zeroElements[randomIndex].column] = "4"
     }
     else {
-        if (gameboard[row][col] == "0") {
-            gameboard[row][col] = "4"
-        } else {
-            setTimeout(randomAdd)
-        }
+        gameboardChanged[zeroElements[randomIndex].row][zeroElements[randomIndex].column] = "2"
     }
-    setBoard()
 }
 
-function checkRandomAdd(e) {
-    if (e.key == "ArrowUp") {
-        let numbersOfBoardDown = []
-        let up = 0
-        for (let c = 0; c < gameboard.length; c++) {
-            numbersOfBoardDown.push(gameboard[up][c].toString())
-        }
-        if (numbersOfBoardDown.includes("0") == true) {
-            randomAdd()
+//is equal
+function isEqual(x, y) {
+    for (i = 0; i < x.length; i++) {
+        for (j = 0; j < x[0].length; j++) {
+            if (x[i][j] != y[i][j]) {
+                return false
+            }
         }
     }
-    if (e.key == "ArrowDown") {
-        let numbersOfBoardDown = []
-        let down = gameboard.length - 1
-        for (let c = 0; c < gameboard.length; c++) {
-            numbersOfBoardDown.push(gameboard[down][c].toString())
-        }
-        if (numbersOfBoardDown.includes("0") == true) {
-            randomAdd()
-        }
-    }
-    if (e.key == "ArrowLeft") {
-        let numbersOfBoardDown = []
-        let left = 0
-        for (let r = 0; r < gameboard.length; r++) {
-            numbersOfBoardDown.push(gameboard[r][left].toString())
-        }
-        if (numbersOfBoardDown.includes("0") == true) {
-            randomAdd()
-        }
-    }
-    if (e.key == "ArrowRight") {
-        let numbersOfBoardDown = []
-        let right = gameboard.length - 1
-        for (let r = 0; r < gameboard.length; r++) {
-            numbersOfBoardDown.push(gameboard[r][right].toString())
-        }
-        if (numbersOfBoardDown.includes("0") == true) {
-            randomAdd()
+    return true
+}
+
+function makeEqual(x, y) {
+    for (let r = 0; r < x.length; r++) {
+        for (let c = 0; c < x.length; c++) {
+            x[r][c] = y[r][c]
         }
     }
 }
@@ -134,33 +118,43 @@ document.addEventListener('keydown', keyFunction)
 
 function keyFunction(e) {
     if (e.key == "ArrowUp" || e.key == "w") {
-        setBoard()
         moveUp()
-        setBoard()
-        randomAdd(e)
+        if (isEqual(gameboard, gameboardChanged) == false) {
+            randomAdd()
+            makeEqual(gameboard, gameboardChanged)
+            setBoard()
+        }
     }
     else if (e.key == "ArrowDown" || e.key == "s") {
-        setBoard()
         moveDown()
-        setBoard()
-        randomAdd(e)
+        if (isEqual(gameboard, gameboardChanged) == false) {
+            randomAdd()
+            makeEqual(gameboard, gameboardChanged)
+            setBoard()
+        }
     }
     else if (e.key == "ArrowLeft" || e.key == "s") {
-        setBoard()
         moveLeft()
-        setBoard()
-        randomAdd(e)
+        if (isEqual(gameboard, gameboardChanged) == false) {
+            randomAdd()
+            makeEqual(gameboard, gameboardChanged)
+            setBoard()
+        }
     }
     else if (e.key == "ArrowRight" || e.key == "s") {
-        setBoard()
         moveRight()
-        setBoard()
-        randomAdd(e)
+        if (isEqual(gameboard, gameboardChanged) == false) {
+            randomAdd()
+            makeEqual(gameboard, gameboardChanged)
+            setBoard()
+        }
+    }
+    if (isGameOver()) {
+        console.log("game is over")
     }
 }
 
 //move functions
-
 function spliceZero(array) {
     while (array.includes("0")) {
         let index = array.indexOf("0")
@@ -190,97 +184,110 @@ function addCells(array) {
 
 
 //move function keys
-
 function moveUp() {
-    for (let c = 0; c < gameboard.length; c++) {
+    for (let c = 0; c < gameboardChanged.length; c++) {
         let array = []
-        for (let r = 0; r < gameboard.length; r++) {
-            array.push(gameboard[r][c])
+        for (let r = 0; r < gameboardChanged.length; r++) {
+            array.push(gameboardChanged[r][c])
         }
         spliceZero(array)
         addCells(array)
         spliceZero(array)
         let countRow = 0
-        for (let i = 0; i < gameboard.length; i++) {
-            gameboard[countRow][c] = array[i]
+        for (let i = 0; i < gameboardChanged.length; i++) {
+            gameboardChanged[countRow][c] = array[i]
             countRow += 1
         }
-        for (let nr = 0; nr < gameboard.length; nr++) {
-            if (gameboard[nr][c] == undefined) {
-                gameboard[nr][c] = "0"
+        for (let nr = 0; nr < gameboardChanged.length; nr++) {
+            if (gameboardChanged[nr][c] == undefined) {
+                gameboardChanged[nr][c] = "0"
             }
         }
     }
 }
 
 function moveDown() {
-    for (let c = 0; c < gameboard.length; c++) {
+    for (let c = 0; c < gameboardChanged.length; c++) {
         let array = []
-        for (let r = gameboard.length - 1; 0 <= r; r--) {
-            array.push(gameboard[r][c])
+        for (let r = gameboardChanged.length - 1; 0 <= r; r--) {
+            array.push(gameboardChanged[r][c])
         }
         spliceZero(array)
         addCells(array)
         spliceZero(array)
-        //gameboard yerleştirme
         let countRow = 3
-        for (let i = 0; i < gameboard.length; i++) {
-            gameboard[countRow][c] = array[i]
+        for (let i = 0; i < gameboardChanged.length; i++) {
+            gameboardChanged[countRow][c] = array[i]
             countRow -= 1
         }
-        //gameboard sıfır yerleştirme
-        for (let nr = gameboard.length - 1; 0 <= nr; nr--) {
-            if (gameboard[nr][c] == undefined) {
-                gameboard[nr][c] = "0"
+        for (let nr = gameboardChanged.length - 1; 0 <= nr; nr--) {
+            if (gameboardChanged[nr][c] == undefined) {
+                gameboardChanged[nr][c] = "0"
             }
         }
     }
 }
 
-
 function moveLeft() {
-    for (let r = 0; r < gameboard.length; r++) {
+    for (let r = 0; r < gameboardChanged.length; r++) {
         let array = []
-        for (let c = 0; c < gameboard.length; c++) {
-            array.push(gameboard[r][c])
+        for (let c = 0; c < gameboardChanged.length; c++) {
+            array.push(gameboardChanged[r][c])
         }
         spliceZero(array)
         addCells(array)
         spliceZero(array)
         let countColumn = 0
-        for (let i = 0; i < gameboard.length; i++) {
-            gameboard[r][countColumn] = array[i]
+        for (let i = 0; i < gameboardChanged.length; i++) {
+            gameboardChanged[r][countColumn] = array[i]
             countColumn += 1
         }
-        for (let nc = 0; nc < gameboard.length; nc++) {
-            if (gameboard[r][nc] == undefined) {
-                gameboard[r][nc] = "0"
+        for (let nc = 0; nc < gameboardChanged.length; nc++) {
+            if (gameboardChanged[r][nc] == undefined) {
+                gameboardChanged[r][nc] = "0"
             }
         }
     }
 }
 
 function moveRight() {
-    for (let r = 0; r < gameboard.length; r++) {
+    for (let r = 0; r < gameboardChanged.length; r++) {
         let array = []
-        for (let c = gameboard.length - 1; 0 <= c; c--) {
-            array.push(gameboard[r][c])
+        for (let c = gameboardChanged.length - 1; 0 <= c; c--) {
+            array.push(gameboardChanged[r][c])
         }
         spliceZero(array)
         addCells(array)
         spliceZero(array)
-        //gameboard yerleştirme
-        let countColumn = gameboard.length - 1
-        for (let i = 0; i < gameboard.length; i++) {
-            gameboard[r][countColumn] = array[i]
+        let countColumn = gameboardChanged.length - 1
+        for (let i = 0; i < gameboardChanged.length; i++) {
+            gameboardChanged[r][countColumn] = array[i]
             countColumn -= 1
         }
-        //gameboard sıfır yerleştirme
-        for (let nc = 0; nc < gameboard.length; nc++) {
-            if (gameboard[r][nc] == undefined) {
-                gameboard[r][nc] = "0"
+        for (let nc = 0; nc < gameboardChanged.length; nc++) {
+            if (gameboardChanged[r][nc] == undefined) {
+                gameboardChanged[r][nc] = "0"
             }
         }
     }
+}
 
+//is game over
+
+function isGameOver() {
+    for (let row = 0; row < gameboardChanged.length; row++) {
+        for (let col = 0; col < gameboardChanged.length - 1; col++) {
+            if (gameboardChanged[row][col] == gameboardChanged[row][col + 1] || gameboardChanged[row][col] == "0" || gameboardChanged[row][col + 1] == "0") {
+                return false
+            }
+        }
+    }
+    for (let col = 0; col < gameboardChanged.length - 1; col++) {
+        for (let row = 0; row < gameboardChanged.length; row++) {
+            if (gameboardChanged[row][col] == gameboardChanged[row][col + 1] || gameboardChanged[row][col] == "0" || gameboardChanged[row][col + 1] == "0") {
+                return false
+            }
+        }
+    }
+    return true
 }
