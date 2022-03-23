@@ -134,28 +134,24 @@ document.addEventListener('keydown', keyFunction)
 
 function keyFunction(e) {
     if (e.key == "ArrowUp" || e.key == "w") {
-        checkGameOver()
         setBoard()
         moveUp()
         setBoard()
         randomAdd(e)
     }
     else if (e.key == "ArrowDown" || e.key == "s") {
-        checkGameOver()
         setBoard()
         moveDown()
         setBoard()
         randomAdd(e)
     }
     else if (e.key == "ArrowLeft" || e.key == "s") {
-        checkGameOver()
         setBoard()
         moveLeft()
         setBoard()
         randomAdd(e)
     }
     else if (e.key == "ArrowRight" || e.key == "s") {
-        checkGameOver()
         setBoard()
         moveRight()
         setBoard()
@@ -187,6 +183,10 @@ function moveUp() {
                     bestScoreValue.textContent = keepScore
                 }
             }
+        }
+        while (array.includes("0")) {
+            let index = array.indexOf("0")
+            array.splice(index, 1)
         }
         let countRow = 0
         for (let i = 0; i < gameboard.length; i++) {
@@ -225,6 +225,11 @@ function moveDown() {
                     bestScoreValue.textContent = keepScore
                 }
             }
+        }
+        //sıfırları atma
+        while (array.includes("0")) {
+            let index = array.indexOf("0")
+            array.splice(index, 1)
         }
         //gameboard yerleştirme
         let countRow = 3
