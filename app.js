@@ -159,7 +159,37 @@ function keyFunction(e) {
     }
 }
 
-//move numbers
+//move functions
+
+function spliceZero(array) {
+    while (array.includes("0")) {
+        let index = array.indexOf("0")
+        array.splice(index, 1)
+    }
+}
+
+function updateScore(array, i) {
+    let keepScore = parseInt(scoreValue.textContent)
+    let keepBestScore = parseInt(bestScoreValue.textContent)
+    keepScore += parseInt(array[i])
+    scoreValue.textContent = keepScore
+    if (keepBestScore < keepScore) {
+        bestScoreValue.textContent = keepScore
+    }
+}
+
+function addCells(array) {
+    for (let i = 0; i < array.length - 1; i++) {
+        if (array[i] == array[i + 1]) {
+            array[i] = (parseInt(array[i]) + parseInt(array[i + 1])).toString()
+            array[i + 1] = "0"
+            updateScore(array, i)
+        }
+    }
+}
+
+
+//move function keys
 
 function moveUp() {
     for (let c = 0; c < gameboard.length; c++) {
@@ -167,27 +197,9 @@ function moveUp() {
         for (let r = 0; r < gameboard.length; r++) {
             array.push(gameboard[r][c])
         }
-        while (array.includes("0")) {
-            let index = array.indexOf("0")
-            array.splice(index, 1)
-        }
-        for (let i = 0; i < array.length - 1; i++) {
-            if (array[i] == array[i + 1]) {
-                array[i] = (parseInt(array[i]) + parseInt(array[i + 1])).toString()
-                array[i + 1] = "0"
-                let keepScore = parseInt(scoreValue.textContent)
-                let keepBestScore = parseInt(bestScoreValue.textContent)
-                keepScore += parseInt(array[i])
-                scoreValue.textContent = keepScore
-                if (keepBestScore < keepScore) {
-                    bestScoreValue.textContent = keepScore
-                }
-            }
-        }
-        while (array.includes("0")) {
-            let index = array.indexOf("0")
-            array.splice(index, 1)
-        }
+        spliceZero(array)
+        addCells(array)
+        spliceZero(array)
         let countRow = 0
         for (let i = 0; i < gameboard.length; i++) {
             gameboard[countRow][c] = array[i]
@@ -207,30 +219,9 @@ function moveDown() {
         for (let r = gameboard.length - 1; 0 <= r; r--) {
             array.push(gameboard[r][c])
         }
-        //sıfırları atma
-        while (array.includes("0")) {
-            let index = array.indexOf("0")
-            array.splice(index, 1)
-        }
-        //toplama
-        for (let i = 0; i < array.length - 1; i++) {
-            if (array[i] == array[i + 1]) {
-                array[i] = (parseInt(array[i]) + parseInt(array[i + 1])).toString()
-                array[i + 1] = "0"
-                let keepScore = parseInt(scoreValue.textContent)
-                let keepBestScore = parseInt(bestScoreValue.textContent)
-                keepScore += parseInt(array[i])
-                scoreValue.textContent = keepScore
-                if (keepBestScore < keepScore) {
-                    bestScoreValue.textContent = keepScore
-                }
-            }
-        }
-        //sıfırları atma
-        while (array.includes("0")) {
-            let index = array.indexOf("0")
-            array.splice(index, 1)
-        }
+        spliceZero(array)
+        addCells(array)
+        spliceZero(array)
         //gameboard yerleştirme
         let countRow = 3
         for (let i = 0; i < gameboard.length; i++) {
@@ -253,27 +244,9 @@ function moveLeft() {
         for (let c = 0; c < gameboard.length; c++) {
             array.push(gameboard[r][c])
         }
-        while (array.includes("0")) {
-            let index = array.indexOf("0")
-            array.splice(index, 1)
-        }
-        for (let i = 0; i < array.length - 1; i++) {
-            if (array[i] == array[i + 1]) {
-                array[i] = (parseInt(array[i]) + parseInt(array[i + 1])).toString()
-                array[i + 1] = "0"
-                let keepScore = parseInt(scoreValue.textContent)
-                let keepBestScore = parseInt(bestScoreValue.textContent)
-                keepScore += parseInt(array[i])
-                scoreValue.textContent = keepScore
-                if (keepBestScore < keepScore) {
-                    bestScoreValue.textContent = keepScore
-                }
-            }
-        }
-        while (array.includes("0")) {
-            let index = array.indexOf("0")
-            array.splice(index, 1)
-        }
+        spliceZero(array)
+        addCells(array)
+        spliceZero(array)
         let countColumn = 0
         for (let i = 0; i < gameboard.length; i++) {
             gameboard[r][countColumn] = array[i]
@@ -293,39 +266,15 @@ function moveRight() {
         for (let c = gameboard.length - 1; 0 <= c; c--) {
             array.push(gameboard[r][c])
         }
-        console.log("ilk")
-        console.log(array)
-        //sıfırları atma
-        while (array.includes("0")) {
-            let index = array.indexOf("0")
-            array.splice(index, 1)
-        }
-        console.log("sıfır atma")
-        console.log(array)
-        //toplama
-        for (let i = 0; i < array.length - 1; i++) {
-            if (array[i] == array[i + 1]) {
-                array[i] = (parseInt(array[i]) + parseInt(array[i + 1])).toString()
-                array[i + 1] = "0"
-            }
-        }
-        console.log("toplama")
-        console.log(array)
-        //sıfırları atma-2
-        while (array.includes("0")) {
-            let index = array.indexOf("0")
-            array.splice(index, 1)
-        }
-        console.log("sıfır atma 2")
-        console.log(array)
+        spliceZero(array)
+        addCells(array)
+        spliceZero(array)
         //gameboard yerleştirme
         let countColumn = gameboard.length - 1
         for (let i = 0; i < gameboard.length; i++) {
             gameboard[r][countColumn] = array[i]
             countColumn -= 1
         }
-        console.log("yerleştirme")
-        console.log(array)
         //gameboard sıfır yerleştirme
         for (let nc = 0; nc < gameboard.length; nc++) {
             if (gameboard[r][nc] == undefined) {
