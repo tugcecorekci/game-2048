@@ -97,31 +97,11 @@ function randomAdd() {
     }
     let randomIndex = Math.floor(Math.random() * zeroElements.length)
     let possibility = Math.random()
-    if (possibility < 0.1) {
+    if (possibility < 0.2) {
         gameboardChanged[zeroElements[randomIndex].row][zeroElements[randomIndex].col] = "4"
     }
     else {
         gameboardChanged[zeroElements[randomIndex].row][zeroElements[randomIndex].col] = "2"
-    }
-}
-
-//is equal
-function isEqual(x, y) {
-    for (i = 0; i < x.length; i++) {
-        for (j = 0; j < x[0].length; j++) {
-            if (x[i][j] != y[i][j]) {
-                return false
-            }
-        }
-    }
-    return true
-}
-
-function makeEqual(x, y) {
-    for (let r = 0; r < x.length; r++) {
-        for (let c = 0; c < x.length; c++) {
-            x[r][c] = y[r][c]
-        }
     }
 }
 
@@ -168,34 +148,6 @@ function keyFunction(e) {
     if (isGameOver()) {
         sectionGameOver.style.display = "grid"
         return
-    }
-}
-
-//move functions
-function spliceZero(array) {
-    while (array.includes("0")) {
-        let index = array.indexOf("0")
-        array.splice(index, 1)
-    }
-}
-
-function updateScore(array, i) {
-    let keepScore = parseInt(scoreValue.textContent)
-    let keepBestScore = parseInt(bestScoreValue.textContent)
-    keepScore += parseInt(array[i])
-    scoreValue.textContent = keepScore
-    if (keepBestScore < keepScore) {
-        bestScoreValue.textContent = keepScore
-    }
-}
-
-function addCells(array) {
-    for (let i = 0; i < array.length - 1; i++) {
-        if (array[i] == array[i + 1]) {
-            array[i] = (parseInt(array[i]) + parseInt(array[i + 1])).toString()
-            array[i + 1] = "0"
-            updateScore(array, i)
-        }
     }
 }
 
@@ -284,6 +236,54 @@ function moveRight() {
             if (gameboardChanged[r][nc] == undefined) {
                 gameboardChanged[r][nc] = "0"
             }
+        }
+    }
+}
+
+//move functions
+function spliceZero(array) {
+    while (array.includes("0")) {
+        let index = array.indexOf("0")
+        array.splice(index, 1)
+    }
+}
+
+function addCells(array) {
+    for (let i = 0; i < array.length - 1; i++) {
+        if (array[i] == array[i + 1]) {
+            array[i] = (parseInt(array[i]) + parseInt(array[i + 1])).toString()
+            array[i + 1] = "0"
+            updateScore(array, i)
+        }
+    }
+}
+
+function updateScore(array, i) {
+    let keepScore = parseInt(scoreValue.textContent)
+    let keepBestScore = parseInt(bestScoreValue.textContent)
+    keepScore += parseInt(array[i])
+    scoreValue.textContent = keepScore
+    if (keepBestScore < keepScore) {
+        bestScoreValue.textContent = keepScore
+    }
+}
+
+//is equal
+function isEqual(x, y) {
+    for (i = 0; i < x.length; i++) {
+        for (j = 0; j < x[0].length; j++) {
+            if (x[i][j] != y[i][j]) {
+                return false
+            }
+        }
+    }
+    return true
+}
+
+function makeEqual(x, y) {
+    for (let r = 0; r < x.length; r++) {
+        for (let c = 0; c < x.length; c++) {
+            x[r][c] = y[r][c]
         }
     }
 }
