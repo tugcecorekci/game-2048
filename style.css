@@ -76,15 +76,59 @@ body {
     align-items: center;
 }
 
+.textAlert {
+    color: var(--numberDarkColor);
+    font-size: 6rem;
+    font-weight: 900;
+    letter-spacing: .1rem;
+    grid-column: 1 / span 2;
+}
+
+.win {
+    margin-top: 30vh;
+    padding-top: 25vh;
+    padding-bottom: 25vh;
+    display: none;
+    grid-template-rows: 60% 40%;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2rem;
+    justify-items: center;
+    align-items: end;
+    background-color: rgba(237, 236, 236, 0.4);
+    width: 50rem;
+    height: 70vh;
+    z-index: 1;
+    position: absolute;
+}
+
+.gameOver {
+    margin-top: 30vh;
+    padding-top: 25vh;
+    padding-bottom: 25vh;
+    display: none;
+    grid-template-rows: 60% 40%;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2rem;
+    justify-items: center;
+    align-items: end;
+    align-items: center;
+    background-color: rgba(237, 236, 236, 0.4);
+    width: 50rem;
+    height: 70vh;
+    z-index: 1;
+    position: absolute;
+}
+
 .project {
     padding-top: 1rem;
     padding-bottom: 3rem;
     display: grid;
     justify-content: center;
     align-items: center;
-    grid-template-rows: 15% 12% 70%;
+    grid-template-rows: 17% 13% 70%;
     width: 50rem;
     height: 100vh;
+    z-index: 0;
 }
 
 header {
@@ -149,7 +193,9 @@ nav {
     font-weight: 700;
 }
 
-.newGameBtn {
+.buttons {
+    display: inline;
+    text-transform: uppercase;
     outline: none;
     border: none;
     border-radius: .5rem;
@@ -160,6 +206,12 @@ nav {
     font-weight: 700;
     text-align: center;
 }
+
+.buttons:hover {
+    cursor: pointer;
+}
+
+
 
 main {
     margin-top: 1rem;
@@ -242,3 +294,28 @@ main {
     font-size: 3.5rem;
     color: var(--textLightColor)
 }
+
+div > #newGameBtn {
+    justify-self: right;
+}
+div > #share {
+    justify-self: left;
+}
+
+/* #slide{
+    background-color: #e36748;
+    animation-duration: 3s;
+    animation-name: slidein;
+}
+
+@keyframes slidein {
+    from {
+      margin-left: 50%;
+      width: 100%;
+    }
+  
+    to {
+      margin-left: 0%;
+      width: 100%;
+    }
+  } */

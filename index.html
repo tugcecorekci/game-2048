@@ -16,7 +16,7 @@
 <body>
     <div class="project">
         <header>
-            <h1>2048</h1>
+            <h1 id="slide">2048</h1>
             <div class="currentScore">
                 <p id="scoreText">SCORE</p>
                 <p id="scoreValue">0</p>
@@ -28,14 +28,23 @@
         </header>
         <nav>
             <p class="howto">Join the tiles, get to <span id="howtobold">2048!</span></p>
-            <button class="newGameBtn">NEW GAME</button>
+            <button class="buttons" id="newGameBtn">NEW GAME</button>
         </nav>
         <main>
             <div class="gamePanel">
             </div>
         </main>
+        <div class="win">
+            <p class="textAlert">YOU WIN!</p>
+            <button class="buttons" id="newGameBtn">TRY AGAIN</button>
+            <button class="buttons" id="share">SHARE</button>
+        </div>
+        <div class="gameOver">
+            <p class="textAlert">GAME OVER!</p>
+            <button class="buttons" id="newGameBtn">TRY AGAIN</button>
+            <button class="buttons" id="share">SHARE</button>
+        </div>
     </div>
-
     <script src="app.js"></script>
 </body>
 

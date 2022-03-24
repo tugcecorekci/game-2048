@@ -1,9 +1,9 @@
 const gamePanel = document.querySelector('.gamePanel')
 const scoreValue = document.querySelector('#scoreValue')
 const bestScoreValue = document.querySelector('#bestScoreValue')
-const newGameBtn = document.querySelector('.newGameBtn')
-
-newGameBtn.addEventListener('click', startNewGame)
+const newGameBtns = document.querySelectorAll('#newGameBtn')
+const sectionGameOver = document.querySelector('.gameOver')
+const sectionWin = document.querySelector('.win')
 
 let gameboard = [
     ["0", "0", "0", "0"],
@@ -35,8 +35,18 @@ let numbers = {
 }
 
 //new game
+for (let b = 0; b < newGameBtns.length; b++) {
+    newGameBtns[b].addEventListener('click', startNewGame)
+}
+
 function startNewGame() {
     gameboard = [
+        ["0", "0", "0", "0"],
+        ["0", "0", "0", "0"],
+        ["0", "0", "0", "0"],
+        ["0", "0", "0", "0"]
+    ]
+    gameboardChanged = [
         ["0", "0", "0", "0"],
         ["0", "0", "0", "0"],
         ["0", "0", "0", "0"],
@@ -47,6 +57,8 @@ function startNewGame() {
     makeEqual(gameboard, gameboardChanged)
     setBoard()
     scoreValue.textContent = "0"
+    sectionGameOver.style.display = "none"
+    sectionWin.style.display = "none"
 }
 
 startNewGame()
@@ -79,17 +91,17 @@ function randomAdd() {
     for (let i = 0; i < gameboard.length; i++) {
         for (let j = 0; j < gameboard.length; j++) {
             if (gameboardChanged[i][j] == 0) {
-                zeroElements.push({ row: i, column: j })
+                zeroElements.push({ row: i, col: j })
             }
         }
     }
     let randomIndex = Math.floor(Math.random() * zeroElements.length)
     let possibility = Math.random()
     if (possibility < 0.1) {
-        gameboardChanged[zeroElements[randomIndex].row][zeroElements[randomIndex].column] = "4"
+        gameboardChanged[zeroElements[randomIndex].row][zeroElements[randomIndex].col] = "4"
     }
     else {
-        gameboardChanged[zeroElements[randomIndex].row][zeroElements[randomIndex].column] = "2"
+        gameboardChanged[zeroElements[randomIndex].row][zeroElements[randomIndex].col] = "2"
     }
 }
 
@@ -133,7 +145,7 @@ function keyFunction(e) {
             setBoard()
         }
     }
-    else if (e.key == "ArrowLeft" || e.key == "s") {
+    else if (e.key == "ArrowLeft" || e.key == "a") {
         moveLeft()
         if (isEqual(gameboard, gameboardChanged) == false) {
             randomAdd()
@@ -141,7 +153,7 @@ function keyFunction(e) {
             setBoard()
         }
     }
-    else if (e.key == "ArrowRight" || e.key == "s") {
+    else if (e.key == "ArrowRight" || e.key == "f") {
         moveRight()
         if (isEqual(gameboard, gameboardChanged) == false) {
             randomAdd()
@@ -149,8 +161,13 @@ function keyFunction(e) {
             setBoard()
         }
     }
+    if (isWin()) {
+        sectionWin.style.display = "grid"
+        return
+    }
     if (isGameOver()) {
-        console.log("game is over")
+        sectionGameOver.style.display = "grid"
+        return
     }
 }
 
@@ -181,7 +198,6 @@ function addCells(array) {
         }
     }
 }
-
 
 //move function keys
 function moveUp() {
@@ -272,8 +288,7 @@ function moveRight() {
     }
 }
 
-//is game over
-
+//is game over - win
 function isGameOver() {
     for (let row = 0; row < gameboardChanged.length; row++) {
         for (let col = 0; col < gameboardChanged.length - 1; col++) {
@@ -290,4 +305,11 @@ function isGameOver() {
         }
     }
     return true
+}
+
+function isWin() {
+    let gameboardElements = gameboardChanged.flat()
+    if (gameboardElements.includes('2048')) {
+        return true
+    }
 }
