@@ -66,9 +66,9 @@ startNewGame()
 //set numbers from gameboard array to board
 function setBoard() {
     resetBoard()
-    for (let i = 0; i < gameboard.length; i++) {
-        for (let j = 0; j < gameboard.length; j++) {
-            let value = gameboard[i][j]
+    for (let i = 0; i < gameboardChanged.length; i++) {
+        for (let j = 0; j < gameboardChanged.length; j++) {
+            let value = gameboardChanged[i][j]
             let cell = document.createElement('div')
             cell.setAttribute('id', numbers[value])
             gamePanel.appendChild(cell)
