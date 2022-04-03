@@ -4,6 +4,16 @@ const bestScoreValue = document.querySelector('#bestScoreValue')
 const newGameBtns = document.querySelectorAll('#newGameBtn')
 const sectionGameOver = document.querySelector('.gameOver')
 const sectionWin = document.querySelector('.win')
+const currentScoreTable = document.querySelector('.currentScore')
+const boardPanel = document.querySelector('.boardPanel')
+
+function createBoardCells() {
+    let totalCell = gameboard.length * gameboard.length
+    for (let i = 0; i < totalCell; i++) {
+        let cell = document.createElement('div')
+        boardPanel.appendChild(cell)
+    }
+}
 
 let gameboard = [
     ["0", "0", "0", "0"],
@@ -35,10 +45,6 @@ let numbers = {
 }
 
 //new game
-for (let b = 0; b < newGameBtns.length; b++) {
-    newGameBtns[b].addEventListener('click', startNewGame)
-}
-
 function startNewGame() {
     gameboard = [
         ["0", "0", "0", "0"],
@@ -52,10 +58,13 @@ function startNewGame() {
         ["0", "0", "0", "0"],
         ["0", "0", "0", "0"]
     ]
+    createBoardCells()
+    resetBoard()
+    createBoard()
     randomAdd()
     randomAdd()
-    makeEqual(gameboard, gameboardChanged)
     setBoard()
+    makeEqual(gameboard, gameboardChanged)
     scoreValue.textContent = "0"
     sectionGameOver.style.display = "none"
     sectionWin.style.display = "none"
@@ -63,9 +72,14 @@ function startNewGame() {
 
 startNewGame()
 
-//set numbers from gameboard array to board
-function setBoard() {
-    resetBoard()
+//new game board with randoms
+function resetBoard() {
+    while (gamePanel.firstChild) {
+        gamePanel.removeChild(gamePanel.lastChild)
+    }
+}
+
+function createBoard() {
     for (let i = 0; i < gameboardChanged.length; i++) {
         for (let j = 0; j < gameboardChanged.length; j++) {
             let value = gameboardChanged[i][j]
@@ -79,9 +93,20 @@ function setBoard() {
     }
 }
 
-function resetBoard() {
-    while (gamePanel.firstChild) {
-        gamePanel.removeChild(gamePanel.lastChild)
+function setBoard() {
+    for (let i = 0; i < gameboardChanged.length; i++) {
+        for (let j = 0; j < gameboardChanged.length; j++) {
+            let value = gameboardChanged[i][j]
+            let nth = (i * 4) + j + 1
+            let nthCell = document.querySelector(`.gamePanel div:nth-child(${nth})`)
+            nthCell.setAttribute('id', numbers[value])
+            if (value != "0") {
+                nthCell.textContent = value
+            }
+            else {
+                nthCell.textContent = ''
+            }
+        }
     }
 }
 
@@ -97,18 +122,26 @@ function randomAdd() {
     }
     let randomIndex = Math.floor(Math.random() * zeroElements.length)
     let possibility = Math.random()
+    let row = zeroElements[randomIndex].row
+    let col = zeroElements[randomIndex].col
     if (possibility < 0.2) {
-        gameboardChanged[zeroElements[randomIndex].row][zeroElements[randomIndex].col] = "4"
+        gameboardChanged[row][col] = "4"
     }
     else {
-        gameboardChanged[zeroElements[randomIndex].row][zeroElements[randomIndex].col] = "2"
+        gameboardChanged[row][col] = "2"
     }
+    let nth = parseInt((parseInt(row) * 4 + parseInt(col) + 1))
+    let nthCell = document.querySelector(`.gamePanel div:nth-child(${nth})`)
+    nthCell.removeAttribute('data-slideleft')
+    nthCell.removeAttribute('data-pulse')
+    nthCell.setAttribute('data-zoom', '')
 }
 
 //keyboard events
 document.addEventListener('keydown', keyFunction)
 
-function keyFunction(e) {
+async function keyFunction(e) {
+    removeCellAttr()
     if (e.key == "ArrowUp" || e.key == "w") {
         moveUp()
         if (isEqual(gameboard, gameboardChanged) == false) {
@@ -128,9 +161,17 @@ function keyFunction(e) {
     else if (e.key == "ArrowLeft" || e.key == "a") {
         moveLeft()
         if (isEqual(gameboard, gameboardChanged) == false) {
-            randomAdd()
-            makeEqual(gameboard, gameboardChanged)
             setBoard()
+            await function () {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        randomAdd()
+                        resolve()
+                    }, 500)
+                })
+            }()
+            setBoard()
+            makeEqual(gameboard, gameboardChanged)
         }
     }
     else if (e.key == "ArrowRight" || e.key == "f") {
@@ -152,123 +193,82 @@ function keyFunction(e) {
 }
 
 //move function keys
-function moveUp() {
-    for (let c = 0; c < gameboardChanged.length; c++) {
-        let array = []
-        for (let r = 0; r < gameboardChanged.length; r++) {
-            array.push(gameboardChanged[r][c])
-        }
-        spliceZero(array)
-        addCells(array)
-        spliceZero(array)
-        let countRow = 0
-        for (let i = 0; i < gameboardChanged.length; i++) {
-            gameboardChanged[countRow][c] = array[i]
-            countRow += 1
-        }
-        for (let nr = 0; nr < gameboardChanged.length; nr++) {
-            if (gameboardChanged[nr][c] == undefined) {
-                gameboardChanged[nr][c] = "0"
-            }
-        }
-    }
-}
-
-function moveDown() {
-    for (let c = 0; c < gameboardChanged.length; c++) {
-        let array = []
-        for (let r = gameboardChanged.length - 1; 0 <= r; r--) {
-            array.push(gameboardChanged[r][c])
-        }
-        spliceZero(array)
-        addCells(array)
-        spliceZero(array)
-        let countRow = 3
-        for (let i = 0; i < gameboardChanged.length; i++) {
-            gameboardChanged[countRow][c] = array[i]
-            countRow -= 1
-        }
-        for (let nr = gameboardChanged.length - 1; 0 <= nr; nr--) {
-            if (gameboardChanged[nr][c] == undefined) {
-                gameboardChanged[nr][c] = "0"
-            }
-        }
-    }
-}
-
 function moveLeft() {
-    for (let r = 0; r < gameboardChanged.length; r++) {
-        let array = []
-        for (let c = 0; c < gameboardChanged.length; c++) {
-            array.push(gameboardChanged[r][c])
-        }
-        spliceZero(array)
-        addCells(array)
-        spliceZero(array)
-        let countColumn = 0
-        for (let i = 0; i < gameboardChanged.length; i++) {
-            gameboardChanged[r][countColumn] = array[i]
-            countColumn += 1
-        }
-        for (let nc = 0; nc < gameboardChanged.length; nc++) {
-            if (gameboardChanged[r][nc] == undefined) {
-                gameboardChanged[r][nc] = "0"
-            }
-        }
-    }
-}
-
-function moveRight() {
-    for (let r = 0; r < gameboardChanged.length; r++) {
-        let array = []
-        for (let c = gameboardChanged.length - 1; 0 <= c; c--) {
-            array.push(gameboardChanged[r][c])
-        }
-        spliceZero(array)
-        addCells(array)
-        spliceZero(array)
-        let countColumn = gameboardChanged.length - 1
-        for (let i = 0; i < gameboardChanged.length; i++) {
-            gameboardChanged[r][countColumn] = array[i]
-            countColumn -= 1
-        }
-        for (let nc = 0; nc < gameboardChanged.length; nc++) {
-            if (gameboardChanged[r][nc] == undefined) {
-                gameboardChanged[r][nc] = "0"
-            }
-        }
-    }
+    zeroAndValue()
+    zeroAndValue()
+    zeroAndValue()
+    addEqualValues()
+    zeroAndValue()
 }
 
 //move functions
-function spliceZero(array) {
-    while (array.includes("0")) {
-        let index = array.indexOf("0")
-        array.splice(index, 1)
+function removeCellAttr() {
+    let cells = gamePanel.childNodes
+    for (let cell = 0; cell < cells.length; cell++) {
+        cells[cell].removeAttribute('data-slideleft')
+        cells[cell].removeAttribute('data-pulse')
+        cells[cell].removeAttribute('data-zoom')
     }
 }
 
-function addCells(array) {
-    for (let i = 0; i < array.length - 1; i++) {
-        if (array[i] == array[i + 1]) {
-            array[i] = (parseInt(array[i]) + parseInt(array[i + 1])).toString()
-            array[i + 1] = "0"
-            updateScore(array, i)
+function zeroAndValue() {
+    for (let r = 0; r < gameboardChanged.length; r++) {
+        for (let c = 0; c < gameboardChanged.length - 1; c++) {
+            if (gameboardChanged[r][c] == "0" && gameboardChanged[r][c + 1] != "0") {
+                gameboardChanged[r][c] = gameboardChanged[r][c + 1]
+                gameboardChanged[r][c + 1] = "0"
+                let nth = (r * 4) + c + 1
+                let nthCell = document.querySelector(`.gamePanel div:nth-child(${nth})`)
+                nthCell.setAttribute('data-slideleft', '')
+            }
         }
     }
 }
 
-function updateScore(array, i) {
+function addEqualValues() {
     let keepScore = parseInt(scoreValue.textContent)
     let keepBestScore = parseInt(bestScoreValue.textContent)
-    keepScore += parseInt(array[i])
-    scoreValue.textContent = keepScore
-    if (keepBestScore < keepScore) {
-        bestScoreValue.textContent = keepScore
+    for (let r = 0; r < gameboardChanged.length; r++) {
+        for (let c = 0; c < gameboardChanged.length - 1; c++) {
+            if (gameboardChanged[r][c] != "0" && gameboardChanged[r][c] == gameboardChanged[r][c + 1]) {
+                gameboardChanged[r][c] = (parseInt(gameboardChanged[r][c]) + parseInt(gameboardChanged[r][c + 1])).toString()
+                gameboardChanged[r][c + 1] = "0"
+                let nth = (r * 4) + c + 1
+                let nthCell = document.querySelector(`.gamePanel div:nth-child(${nth})`)
+                addPulseAttr(nthCell, 100)
+                let nthNext = nth + 1
+                let nextCell = document.querySelector(`.gamePanel div:nth-child(${nthNext})`)
+                nextCell.setAttribute('data-slideleft', '')
+                keepScore += parseInt(gameboardChanged[r][c])
+                scoreValue.textContent = keepScore
+                if (keepScore > keepBestScore) {
+                    keepBestScore = keepScore
+                    bestScoreValue.textContent = keepBestScore
+                }
+                let point = document.createElement('p')
+                point.textContent = `+${gameboardChanged[r][c]}`
+                point.setAttribute('data-score-slideup', '')
+                point.setAttribute('id', 'point')
+                currentScoreTable.appendChild(point)
+                removePoint(currentScoreTable, point, 1000)
+            }
+        }
     }
 }
 
-//is equal
+function addPulseAttr(nthCell, speed) {
+    setTimeout(function () {
+        nthCell.setAttribute('data-pulse', '')
+    }, speed)
+}
+
+function removePoint(table, point, speed) {
+    setTimeout(function () {
+        table.removeChild(point)
+    }, speed)
+}
+
+//equality functions
 function isEqual(x, y) {
     for (i = 0; i < x.length; i++) {
         for (j = 0; j < x[0].length; j++) {
@@ -288,7 +288,7 @@ function makeEqual(x, y) {
     }
 }
 
-//is game over - win
+//game over or win functions
 function isGameOver() {
     for (let row = 0; row < gameboardChanged.length; row++) {
         for (let col = 0; col < gameboardChanged.length - 1; col++) {
