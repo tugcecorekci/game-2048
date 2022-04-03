@@ -245,8 +245,6 @@ function addEqualsUp() {
                 point.setAttribute('id', 'point')
                 currentScoreTable.appendChild(point)
                 removePoint(currentScoreTable, point, 1000)
-                console.log(nthCell)
-                console.log(nextCell)
             }
         }
     }
@@ -301,8 +299,6 @@ function addEqualsDown() {
                 point.setAttribute('id', 'point')
                 currentScoreTable.appendChild(point)
                 removePoint(currentScoreTable, point, 1000)
-                console.log(nthCell)
-                console.log(nextCell)
             }
         }
     }
@@ -357,8 +353,6 @@ function addEqualsLeft() {
                 point.setAttribute('id', 'point')
                 currentScoreTable.appendChild(point)
                 removePoint(currentScoreTable, point, 1000)
-                console.log(nthCell)
-                console.log(nextCell)
             }
         }
     }
@@ -413,8 +407,6 @@ function addEqualsRight() {
                 point.setAttribute('id', 'point')
                 currentScoreTable.appendChild(point)
                 removePoint(currentScoreTable, point, 1000)
-                console.log(nthCell)
-                console.log(nextCell)
             }
         }
     }
