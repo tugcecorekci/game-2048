@@ -8,6 +8,9 @@ const currentScoreTable = document.querySelector('.currentScore')
 const boardPanel = document.querySelector('.boardPanel')
 
 function createBoardCells() {
+    while (boardPanel.firstChild) {
+        boardPanel.removeChild(boardPanel.lastChild)
+    }
     let totalCell = gameboard.length * gameboard.length
     for (let i = 0; i < totalCell; i++) {
         let cell = document.createElement('div')
@@ -71,6 +74,11 @@ function startNewGame() {
 }
 
 startNewGame()
+
+//newGame buttons click events
+for (let b = 0; b < newGameBtns.length; b++) {
+    newGameBtns[b].addEventListener('click', startNewGame)
+}
 
 //new game board with randoms
 function resetBoard() {
@@ -140,78 +148,176 @@ function randomAdd() {
 //keyboard events
 document.addEventListener('keydown', keyFunction)
 
+async function reviseBoard() {
+    if (isEqual(gameboard, gameboardChanged) == false) {
+        setBoard()
+        await function () {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    randomAdd()
+                    resolve()
+                }, 100)
+            })
+        }()
+        setBoard()
+        makeEqual(gameboard, gameboardChanged)
+    }
+}
+
 async function keyFunction(e) {
     removeCellAttr()
     if (e.key == "ArrowUp" || e.key == "w") {
         moveUp()
-        if (isEqual(gameboard, gameboardChanged) == false) {
-            randomAdd()
-            makeEqual(gameboard, gameboardChanged)
-            setBoard()
-        }
+        reviseBoard()
     }
     else if (e.key == "ArrowDown" || e.key == "s") {
         moveDown()
-        if (isEqual(gameboard, gameboardChanged) == false) {
-            randomAdd()
-            makeEqual(gameboard, gameboardChanged)
-            setBoard()
-        }
+        reviseBoard()
     }
     else if (e.key == "ArrowLeft" || e.key == "a") {
         moveLeft()
-        if (isEqual(gameboard, gameboardChanged) == false) {
-            setBoard()
-            await function () {
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        randomAdd()
-                        resolve()
-                    }, 500)
-                })
-            }()
-            setBoard()
-            makeEqual(gameboard, gameboardChanged)
-        }
+        reviseBoard()
     }
     else if (e.key == "ArrowRight" || e.key == "f") {
         moveRight()
-        if (isEqual(gameboard, gameboardChanged) == false) {
-            randomAdd()
-            makeEqual(gameboard, gameboardChanged)
-            setBoard()
-        }
+        reviseBoard()
     }
     if (isWin()) {
-        sectionWin.style.display = "grid"
-        return
+        setTimeout(() => {
+            sectionGameOver.setAttribute('data-fadeIn', '')
+            sectionWin.style.display = "grid"
+        }, 100)
     }
     if (isGameOver()) {
-        sectionGameOver.style.display = "grid"
-        return
+        setTimeout(() => {
+            sectionGameOver.setAttribute('data-fadeIn', '')
+            sectionGameOver.style.display = "grid"
+        }, 100)
     }
 }
 
-//move function keys
+//moveUp function
+function moveUp() {
+    moveValueUp()
+    moveValueUp()
+    moveValueUp()
+    addEqualsUp()
+    moveValueUp()
+}
+
+function moveValueUp() {
+    for (let c = 0; c < gameboardChanged.length; c++) {
+        for (let r = 0; r < gameboardChanged.length - 1; r++) {
+            if (gameboardChanged[r][c] == "0" && gameboardChanged[r + 1][c] != "0") {
+                gameboardChanged[r][c] = gameboardChanged[r + 1][c]
+                gameboardChanged[r + 1][c] = "0"
+                let nth = (r * 4) + c + 1
+                let nthCell = document.querySelector(`.gamePanel div:nth-child(${nth})`)
+                nthCell.setAttribute('data-slideup', '')
+            }
+        }
+    }
+}
+
+function addEqualsUp() {
+    let keepScore = parseInt(scoreValue.textContent)
+    let keepBestScore = parseInt(bestScoreValue.textContent)
+    for (let c = 0; c < gameboardChanged.length; c++) {
+        for (let r = 0; r < gameboardChanged.length - 1; r++) {
+            if (gameboardChanged[r][c] != "0" && gameboardChanged[r][c] == gameboardChanged[r + 1][c]) {
+                gameboardChanged[r][c] = (parseInt(gameboardChanged[r][c]) + parseInt(gameboardChanged[r + 1][c])).toString()
+                gameboardChanged[r + 1][c] = "0"
+                let nth = (r * 4) + c + 1
+                let nthCell = document.querySelector(`.gamePanel div:nth-child(${nth})`)
+                addPulseAttr(nthCell, 100)
+                let nthNext = nth + 4
+                let nextCell = document.querySelector(`.gamePanel div:nth-child(${nthNext})`)
+                nextCell.setAttribute('data-slideup', '')
+                keepScore += parseInt(gameboardChanged[r][c])
+                scoreValue.textContent = keepScore
+                if (keepScore > keepBestScore) {
+                    keepBestScore = keepScore
+                    bestScoreValue.textContent = keepBestScore
+                }
+                let point = document.createElement('p')
+                point.textContent = `+${gameboardChanged[r][c]}`
+                point.setAttribute('data-score-slideup', '')
+                point.setAttribute('id', 'point')
+                currentScoreTable.appendChild(point)
+                removePoint(currentScoreTable, point, 1000)
+                console.log(nthCell)
+                console.log(nextCell)
+            }
+        }
+    }
+}
+
+//moveDown function
+function moveDown() {
+    moveValueDown()
+    moveValueDown()
+    moveValueDown()
+    addEqualsDown()
+    moveValueDown()
+}
+
+function moveValueDown() {
+    for (let c = 0; c < gameboardChanged.length; c++) {
+        for (let r = gameboardChanged.length - 1; 1 <= r; r--) {
+            if (gameboardChanged[r][c] == "0" && gameboardChanged[r - 1][c] != "0") {
+                gameboardChanged[r][c] = gameboardChanged[r - 1][c]
+                gameboardChanged[r - 1][c] = "0"
+                let nth = (r * 4) + c + 1
+                let nthCell = document.querySelector(`.gamePanel div:nth-child(${nth})`)
+                nthCell.setAttribute('data-slidedown', '')
+            }
+        }
+    }
+}
+
+function addEqualsDown() {
+    let keepScore = parseInt(scoreValue.textContent)
+    let keepBestScore = parseInt(bestScoreValue.textContent)
+    for (let c = 0; c < gameboardChanged.length; c++) {
+        for (let r = gameboardChanged.length - 1; 1 <= r; r--) {
+            if (gameboardChanged[r][c] != "0" && gameboardChanged[r][c] == gameboardChanged[r - 1][c]) {
+                gameboardChanged[r][c] = (parseInt(gameboardChanged[r][c]) + parseInt(gameboardChanged[r - 1][c])).toString()
+                gameboardChanged[r - 1][c] = "0"
+                let nth = (r * 4) + c + 1
+                let nthCell = document.querySelector(`.gamePanel div:nth-child(${nth})`)
+                addPulseAttr(nthCell, 100)
+                let nthNext = nth - 4
+                let nextCell = document.querySelector(`.gamePanel div:nth-child(${nthNext})`)
+                nextCell.setAttribute('data-slidedown', '')
+                keepScore += parseInt(gameboardChanged[r][c])
+                scoreValue.textContent = keepScore
+                if (keepScore > keepBestScore) {
+                    keepBestScore = keepScore
+                    bestScoreValue.textContent = keepBestScore
+                }
+                let point = document.createElement('p')
+                point.textContent = `+${gameboardChanged[r][c]}`
+                point.setAttribute('data-score-slideup', '')
+                point.setAttribute('id', 'point')
+                currentScoreTable.appendChild(point)
+                removePoint(currentScoreTable, point, 1000)
+                console.log(nthCell)
+                console.log(nextCell)
+            }
+        }
+    }
+}
+
+//moveLeft function
 function moveLeft() {
-    zeroAndValue()
-    zeroAndValue()
-    zeroAndValue()
-    addEqualValues()
-    zeroAndValue()
+    moveValueLeft()
+    moveValueLeft()
+    moveValueLeft()
+    addEqualsLeft()
+    moveValueLeft()
 }
 
-//move functions
-function removeCellAttr() {
-    let cells = gamePanel.childNodes
-    for (let cell = 0; cell < cells.length; cell++) {
-        cells[cell].removeAttribute('data-slideleft')
-        cells[cell].removeAttribute('data-pulse')
-        cells[cell].removeAttribute('data-zoom')
-    }
-}
-
-function zeroAndValue() {
+function moveValueLeft() {
     for (let r = 0; r < gameboardChanged.length; r++) {
         for (let c = 0; c < gameboardChanged.length - 1; c++) {
             if (gameboardChanged[r][c] == "0" && gameboardChanged[r][c + 1] != "0") {
@@ -225,7 +331,7 @@ function zeroAndValue() {
     }
 }
 
-function addEqualValues() {
+function addEqualsLeft() {
     let keepScore = parseInt(scoreValue.textContent)
     let keepBestScore = parseInt(bestScoreValue.textContent)
     for (let r = 0; r < gameboardChanged.length; r++) {
@@ -251,13 +357,89 @@ function addEqualValues() {
                 point.setAttribute('id', 'point')
                 currentScoreTable.appendChild(point)
                 removePoint(currentScoreTable, point, 1000)
+                console.log(nthCell)
+                console.log(nextCell)
             }
         }
     }
 }
 
+//moveRight function
+function moveRight() {
+    moveValueRight()
+    moveValueRight()
+    moveValueRight()
+    addEqualsRight()
+    moveValueRight()
+}
+
+function moveValueRight() {
+    for (let r = 0; r < gameboardChanged.length; r++) {
+        for (let c = gameboardChanged.length - 1; 1 <= c; c--) {
+            if (gameboardChanged[r][c] == "0" && gameboardChanged[r][c - 1] != "0") {
+                gameboardChanged[r][c] = gameboardChanged[r][c - 1]
+                gameboardChanged[r][c - 1] = "0"
+                let nth = (r * 4) + c + 1
+                let nthCell = document.querySelector(`.gamePanel div:nth-child(${nth})`)
+                nthCell.setAttribute('data-slideright', '')
+            }
+        }
+    }
+}
+
+function addEqualsRight() {
+    let keepScore = parseInt(scoreValue.textContent)
+    let keepBestScore = parseInt(bestScoreValue.textContent)
+    for (let r = 0; r < gameboardChanged.length; r++) {
+        for (let c = gameboardChanged.length - 1; 1 <= c; c--) {
+            if (gameboardChanged[r][c] != "0" && gameboardChanged[r][c] == gameboardChanged[r][c - 1]) {
+                gameboardChanged[r][c] = (parseInt(gameboardChanged[r][c]) + parseInt(gameboardChanged[r][c - 1])).toString()
+                gameboardChanged[r][c - 1] = "0"
+                let nth = (r * 4) + c + 1
+                let nthCell = document.querySelector(`.gamePanel div:nth-child(${nth})`)
+                addPulseAttr(nthCell, 100)
+                let nthNext = nth - 1
+                let nextCell = document.querySelector(`.gamePanel div:nth-child(${nthNext})`)
+                nextCell.setAttribute('data-slideright', '')
+                keepScore += parseInt(gameboardChanged[r][c])
+                scoreValue.textContent = keepScore
+                if (keepScore > keepBestScore) {
+                    keepBestScore = keepScore
+                    bestScoreValue.textContent = keepBestScore
+                }
+                let point = document.createElement('p')
+                point.textContent = `+${gameboardChanged[r][c]}`
+                point.setAttribute('data-score-slideup', '')
+                point.setAttribute('id', 'point')
+                currentScoreTable.appendChild(point)
+                removePoint(currentScoreTable, point, 1000)
+                console.log(nthCell)
+                console.log(nextCell)
+            }
+        }
+    }
+}
+
+//move functions
+function removeCellAttr() {
+    let cells = gamePanel.childNodes
+    for (let cell = 0; cell < cells.length; cell++) {
+        cells[cell].removeAttribute('data-slideup')
+        cells[cell].removeAttribute('data-slidedown')
+        cells[cell].removeAttribute('data-slideleft')
+        cells[cell].removeAttribute('data-slideright')
+        cells[cell].removeAttribute('data-pulse')
+        cells[cell].removeAttribute('data-zoom')
+    }
+}
+
 function addPulseAttr(nthCell, speed) {
     setTimeout(function () {
+        nthCell.removeAttribute('data-slideup')
+        nthCell.removeAttribute('data-slidedown')
+        nthCell.removeAttribute('data-slideleft')
+        nthCell.removeAttribute('data-slideright')
+        nthCell.removeAttribute('data-zoom')
         nthCell.setAttribute('data-pulse', '')
     }, speed)
 }
