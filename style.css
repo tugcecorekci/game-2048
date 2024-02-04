@@ -588,5 +588,6 @@ div>#share {
 @media only screen and (max-width: 620px) {
     body {
         scale: 60%;
+        overflow: hidden
     }
 }
