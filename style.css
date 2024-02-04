@@ -179,10 +179,10 @@ body {
     padding-bottom: 25vh;
     display: hidden;
     grid-template-rows: 60% 40%;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     column-gap: 2rem;
     justify-items: center;
-    align-items: end;
+    align-items: center;
     background-color: rgba(237, 236, 236, 0.4);
     width: 50rem;
     height: 70vh;
@@ -196,7 +196,7 @@ body {
     padding-bottom: 25vh;
     display: hidden;
     grid-template-rows: 60% 40%;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     column-gap: 2rem;
     justify-items: center;
     align-items: end;
@@ -437,10 +437,6 @@ main {
     background-color: #e6c34f;
     font-size: 3.5rem;
     color: var(--textLightColor)
-}
-
-div>#newGameBtn {
-    justify-self: right;
 }
 
 div>#share {
