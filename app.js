@@ -146,6 +146,65 @@ function randomAdd() {
 }
 
 //keyboard events
+let startX = 0
+let startY = 0
+
+const sensitivity = 50
+
+function getFirstTouchLocation(e) {
+    const touch = e.touches[0]
+
+    startX = touch.clientX
+    startY = touch.clientY
+}
+
+async function getLastTouchLocationAndMove(e) {
+    const touch = e.changedTouches[0]
+
+    differenceOnX = touch.clientX - startX
+    differenceOnY = touch.clientY - startY
+
+    const isHorizontal = Math.abs(differenceOnX) > Math.abs(differenceOnY)
+
+    if (isHorizontal) {
+        if (differenceOnX > 0) {
+            moveRight()
+            await reviseBoard()
+        }
+        else {
+            moveLeft()
+            await reviseBoard()
+        }
+    }
+    else if (differenceOnY > 0) {
+        moveDown()
+        await reviseBoard()
+    }
+    else {
+        moveUp()
+        await reviseBoard()
+    }
+
+    if (isWin()) {
+        setTimeout(() => {
+            sectionGameOver.setAttribute('data-fadeIn', '')
+            sectionWin.style.display = "grid"
+        }, 100)
+    }
+    if (isGameOver()) {
+        setTimeout(() => {
+            sectionGameOver.setAttribute('data-fadeIn', '')
+            sectionGameOver.style.display = "grid"
+        }, 100)
+    }
+
+    startX = 0
+    startY = 0
+}
+
+document.addEventListener('touchstart', e => getFirstTouchLocation(e))
+document.addEventListener('touchend', e => getLastTouchLocationAndMove(e))
+
 document.addEventListener('keydown', keyFunction)
 
 async function reviseBoard() {
@@ -475,7 +534,7 @@ function isGameOver() {
     // up-to-bottom check
     for (let col = 0; col < gameboardChanged.length; col++) {
         for (let row = 0; row < gameboardChanged.length - 1; row++) {
-            if (gameboardChanged[row][col] == gameboardChanged[row+1][col] || gameboardChanged[row][col] == "0" || gameboardChanged[row][col + 1] == "0") {
+            if (gameboardChanged[row][col] == gameboardChanged[row + 1][col] || gameboardChanged[row][col] == "0" || gameboardChanged[row][col + 1] == "0") {
                 return false
             }
         }
