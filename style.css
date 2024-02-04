@@ -163,6 +163,7 @@ body {
     align-items: center;
 }
 
+/* Game over or Win Alert */
 .textAlert {
     color: var(--numberDarkColor);
     font-size: 6rem;
@@ -313,11 +314,11 @@ nav {
 }
 
 main {
-    margin-top: 1rem;
-    /* background-color: #b9ada1; */
+    margin-top: 22rem;
     width: 50rem;
     height: 50rem;
     border-radius: .75rem;
+    position: absolute;
 }
 
 .gamePanel {

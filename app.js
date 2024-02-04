@@ -168,19 +168,19 @@ async function keyFunction(e) {
     removeCellAttr()
     if (e.key == "ArrowUp" || e.key == "w") {
         moveUp()
-        reviseBoard()
+        await reviseBoard()
     }
     else if (e.key == "ArrowDown" || e.key == "s") {
         moveDown()
-        reviseBoard()
+        await reviseBoard()
     }
     else if (e.key == "ArrowLeft" || e.key == "a") {
         moveLeft()
-        reviseBoard()
+        await reviseBoard()
     }
     else if (e.key == "ArrowRight" || e.key == "f") {
         moveRight()
-        reviseBoard()
+        await reviseBoard()
     }
     if (isWin()) {
         setTimeout(() => {
@@ -464,6 +464,7 @@ function makeEqual(x, y) {
 
 //game over or win functions
 function isGameOver() {
+    // left-to-right check
     for (let row = 0; row < gameboardChanged.length; row++) {
         for (let col = 0; col < gameboardChanged.length - 1; col++) {
             if (gameboardChanged[row][col] == gameboardChanged[row][col + 1] || gameboardChanged[row][col] == "0" || gameboardChanged[row][col + 1] == "0") {
@@ -471,9 +472,10 @@ function isGameOver() {
             }
         }
     }
-    for (let col = 0; col < gameboardChanged.length - 1; col++) {
-        for (let row = 0; row < gameboardChanged.length; row++) {
-            if (gameboardChanged[row][col] == gameboardChanged[row][col + 1] || gameboardChanged[row][col] == "0" || gameboardChanged[row][col + 1] == "0") {
+    // up-to-bottom check
+    for (let col = 0; col < gameboardChanged.length; col++) {
+        for (let row = 0; row < gameboardChanged.length - 1; row++) {
+            if (gameboardChanged[row][col] == gameboardChanged[row+1][col] || gameboardChanged[row][col] == "0" || gameboardChanged[row][col + 1] == "0") {
                 return false
             }
         }
